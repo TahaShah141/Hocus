@@ -26,6 +26,8 @@ E.addNeighbor(HexagonSide.BOTTOM, G) # E-G
 F.addNeighbor(HexagonSide.BOTTOM_LEFT, G) # F-G
 H.addNeighbor(HexagonSide.BOTTOM, I) # H-I
 
-# YET TO DECIDE HOW TO ADD OVERLAP INFORMATION OF HEXAGONS C, D and E (4 neighbors)
+C.addOverlap(HexagonSide.TOP)
+D.addOverlap(HexagonSide.TOP_RIGHT)
+E.addOverlap(HexagonSide.TOP)
 
 TestMaze = Maze(root=A)

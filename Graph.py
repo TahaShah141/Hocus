@@ -1,8 +1,24 @@
 class Node:
-  def __init__(self, dimension):
-    self.dimension = dimension
+  def __init__(self, hexagon, dimensions=None):
+    if (dimensions == None):
+      raise ValueError("Dimension not defined") 
+  
+    self.dimensions = dimensions
     self.visited = False
-    self.connections = []
+    self.connections = [[], []]
+    self.hexagon = hexagon
+    
+    def getDimensionIndex(self, dimension):
+      return self.dimensions.index(dimension)
+    
+    def connectNode(self, dimension, other):
+      index = getDimensionIndex(dimension)
+      otherIndex = other.getDimensionIndex(dimension)
+      self.connections[index].append(other)
+      other.connections[otherIndex].append(self)
+      
+    def isPortal(self):
+      return dimensions[0] != dimensions[1]
     
 class Graph:
   def __init__(self, root):
