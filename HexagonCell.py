@@ -1,4 +1,4 @@
-from helpers import getOppositeSide
+from helpers import getOppositeSide, calculateOptions
 from Graph import Node
 
 class HexagonCell:
@@ -7,6 +7,10 @@ class HexagonCell:
     self.processed = False
     self.overlapSide = -1
     self.nodes = [[Node(self, [d, D]) for d in range(D, 6)] for D in range(6)]
+
+  def getTraversalOptions(self, currentDimension, enteringSide=None):
+    options = calculateOptions(self)[currentDimension]
+
   
   def getNode(self, dimension, otherDimension=None):
     if (otherDimension == None):
