@@ -2,13 +2,14 @@ from helpers import getOppositeSide, getAllLinks
 from Graph import Node
 
 class HexagonCell:
-  def __init__(self, startDimension=-1, endDimension=-1):
+  def __init__(self, name="", startDimension=-1, endDimension=-1):
     self.neighbors = [None] * 6
     self.visitedLinks = [[] for _ in range(6)]
     self.overlapSide = -1
     self.nodes = [[Node(self, [d, D]) for d in range(D, 6)] for D in range(6)]
     self.startDimension = startDimension
     self.endDimension = endDimension
+    self.name = name
 
   def containsPortal(self, dimension):
     return self.neighbors[dimension] != None

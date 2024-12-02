@@ -1,9 +1,9 @@
 from helpers import getAllLinks
 from Hexagon import makeHexagon
 
-hexA = makeHexagon([2, 5])
+hexA = makeHexagon([3, 1])
 optsA = getAllLinks(hexA)
-optionsA = hexA.getLinks(currentDimension=0, enteringSide=5)
+optionsA = hexA.getLinks(currentDimension=0, enteringSide=3)
 
 for o in range(6):
     print(o, optsA[o])
@@ -11,15 +11,15 @@ print()
 print(optionsA)
 print()
 
-hexB = makeHexagon([0, 1, 2, 3], 0)
-optsB = getAllLinks(hexB)
-optionsB = hexB.getLinks(currentDimension=0, enteringSide=3)
+# hexB = makeHexagon([0, 1, 2, 3], 0)
+# optsB = getAllLinks(hexB)
+# optionsB = hexB.getLinks(currentDimension=0, enteringSide=3)
 
-for o in range(6):
-    print(o, optsA[o])
-print()
-print(optionsB)
-print()
+# for o in range(6):
+#     print(o, optsA[o])
+# print()
+# print(optionsB)
+# print()
 
 
 '''

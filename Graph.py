@@ -9,12 +9,12 @@ class Node:
     self.hexagon = hexagon
     
   def getDimensionIndex(self, dimension):
-    print(self.hexagon, self.dimensions, dimension)
+    # print('getDimensionIndex:',self.hexagon, self.dimensions, dimension)
     return self.dimensions.index(dimension)
   
-  def connectNode(self, other, dimension):
+  def connectNode(self, other, dimension, nextDimension):
     index = self.getDimensionIndex(dimension)
-    otherIndex = other.getDimensionIndex(dimension)
+    otherIndex = other.getDimensionIndex(nextDimension)
     self.connections[index].append(other)
     other.connections[otherIndex].append(self)
     
