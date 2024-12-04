@@ -1,4 +1,4 @@
-from helpers import getOppositeSide, getNodeFromLinks
+from helpers import getOppositeSide
 
 def printStack(stack):
   for hex, link in stack:
@@ -50,10 +50,8 @@ class Maze:
       # Extract Data
       currHex, nextLink = stack.pop()
       # print(currHex.name, nextLink)
-      # self.visited[currHex.name].append(nextLink)
-      currLinks = currHex.getLinks(currentDimension, enteringSide)
-      if (len(currLinks) == 0):
-        print(currHex.name, currHex.neighbors, currentDimension, enteringSide)
+      
+      self.visited[currHex.name].append(nextLink)
       
       nextSide, nextDimension = nextLink
       prevSide = getOppositeSide(nextSide)
@@ -64,42 +62,42 @@ class Maze:
       if (len(nextLinks) == 1) or (len(nextLinks) == 2 and nextLinks[0][0] == getOppositeSide(nextLinks[1][0])):
         #two cases: straight line or dead end
         if nextHex.neighbors[nextSide] == None:
-          print("-dead end-")
+          print("-dead end-", nextHex.name)
         else:
           found, nextHex = findNextHexagon(nextHex, currentDimension, prevSide)
           if not found:
-            print("OTHER DEAD END")
-          else: 
+            print("OTHER DEAD END", nextHex.name)
+          else:
             nextLinks = nextHex.getLinks(nextDimension, prevSide)
-
+      
+      print(currHex.name, nextLink)
       
       # Mark the links
-      currHex.visitedLinks[currentDimension].append(nextLink)
-      nextHex.visitedLinks[nextDimension].append((prevSide, currentDimension))
-
-      # print('currLinks:', currLinks, nextLinks, currHex.endDimension, nextHex.endDimension)
-      if len(currLinks) == 0:
-        print("Curr Link", len(currLinks), len(nextLinks))
-        for hex, LINK in stack:
-          print(hex.name, LINK)
-      # identify nodes using Links and connect them
-      currNode = getNodeFromLinks(currHex, currLinks)
-      nextNode = getNodeFromLinks(nextHex, nextLinks)
-      # print('nextNode:', nextNode.dimensions)
-
-      currNode.connectNode(nextNode, currentDimension, nextDimension)
-
-      # Add new links to the stack
+      currLinkToBan = nextLink
+      nextLinkToBan = (prevSide, nextDimension)
+      
+      currNodeDimensions = currHex.getVisitedLinkDimensions(currLinkToBan)
+      nextNodeDimensions = nextHex.getVisitedLinkDimensions(nextLinkToBan)
+      
+      for d in currNodeDimensions:
+        currHex.visitedLinks[d].append(currLinkToBan)
+      for d in nextNodeDimensions:
+        nextHex.visitedLinks[d].append(nextLinkToBan)
+      
+      currNode = currHex.getNode(currNodeDimensions)
+      nextNode = nextHex.getNode(nextNodeDimensions)
+      
+      currNode.connectNode(nextNode) 
+      
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       stack += newStackLinks
 
-      # print('\n-------------------------------------------\n')
-      # for v in self.visited:
-      #   print(v, self.visited[v])
       explore(stack, nextDimension, prevSide)
 
     # CALL THE RECURSIVE FUNCTION
     explore(stack, currentDimension)
+    for d in self.visited:
+      print(d, self.visited[d])
     
   def drawMaze(self):
     pass

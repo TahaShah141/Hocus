@@ -13,16 +13,28 @@ class HexagonCell:
 
   def containsPortal(self, dimension):
     return self.neighbors[dimension] != None
+  
+  def getVisitedLinkDimensions(self, link):
+    links = getAllLinks(self)
+    toReturn = []
+    for dim in range(6):
+      if link in links[dim]:
+        toReturn.append(dim)
+    return toReturn
 
   def getLinks(self, currentDimension, enteringSide=None):
     options = getAllLinks(self)
 
     links = [n for n in self.neighbors if n != None] 
-
+    
+    # Straight Line without Overlap
     if len(links) == 2 and links[0] == getOppositeSide(links[1]):
+      # Returns only one link
       return [(getOppositeSide(enteringSide), currentDimension)]
 
+    # if not overlap
     if self.overlapSide == -1:
+      # Only for starting
       if (enteringSide == None):
         return options[currentDimension]
       return [(x, y) for x, y in options[currentDimension] if enteringSide in (x, y)] if self.containsPortal(currentDimension) else options[currentDimension]
@@ -33,18 +45,18 @@ class HexagonCell:
     if (currentDimension == A and enteringSide in [Y, Z]) or (currentDimension == B and enteringSide in [W, X]):
         return options[enteringSide] 
     elif currentDimension in [A, B]:
+      # returns one link if going through overlap straight line
       return [(getOppositeSide(enteringSide), currentDimension)]
     else:
       return options[currentDimension]      
 
     
   
-  def getNode(self, dimension, otherDimension=None):
-    if (otherDimension == None):
-      otherDimension = dimension
-
-    lesser, greater = min(dimension, otherDimension), max(dimension, otherDimension)    
-    return self.nodes[lesser][greater-lesser]
+  def getNode(self, dimensions):
+    if len(dimensions) == 1:
+      return self.nodes[dimensions[0]][0]
+    lesser, greater = min(dimensions), max(dimensions)
+    return self.nodes[lesser][greater - lesser]
     
   def getLabelledSides(self):
     links = [i for i in range(6) if self.neighbors[i] != None]
@@ -65,27 +77,6 @@ class HexagonCell:
 
     return A, B, W, X, Y, Z
 
-  
-  def connectHexagon(self, other, dimension): 
-    selfNode = None
-    if (self.neighbors[dimension] == None):
-      selfNode = self.getNode(dimension)
-    else:
-      otherSide = getHexagonSide(other)
-      selfNode = self.getNode(dimension, otherSide)
-    
-    otherNode = None
-    if (other.neighbors[dimension] == None):
-      otherNode = other.getNode(dimension)
-    else:
-      selfSide = other.getHexagonSide(self)
-      otherNode = other.getNode(otherSide, selfSide)
-    
-    selfNode.connectNode(dimension, otherNode)
-   
-    def getHexagonSide(self, other):
-      return self.neighbors.index(other)
-    
   def addNeighbor(self, side, neighbor):
     self.neighbors[side] = neighbor
     neighbor.neighbors[getOppositeSide(side)] = self

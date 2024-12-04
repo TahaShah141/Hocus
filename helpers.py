@@ -49,15 +49,15 @@ def getAllLinks(hexagon):
   
   return links
 
-def getNodeFromLinks(hexagon, links):
-  dimensions = []
-  for _, nextDim in links:
-    if nextDim not in dimensions:
-      dimensions.append(nextDim)
+# def getNodeFromLinks(hexagon, links):
+#   dimensions = []
+#   for _, nextDim in links:
+#     if nextDim not in dimensions:
+#       dimensions.append(nextDim)
 
-  if len(dimensions) == 1:
-    return hexagon.getNode(dimensions[0])
-  return hexagon.getNode(dimensions[0], dimensions[1])
+#   if len(dimensions) == 1:
+#     return hexagon.getNode(dimensions[0])
+#   return hexagon.getNode(dimensions[0], dimensions[1])
 
 
 

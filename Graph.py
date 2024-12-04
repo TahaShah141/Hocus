@@ -12,10 +12,14 @@ class Node:
     # print('getDimensionIndex:',self.hexagon, self.dimensions, dimension)
     return self.dimensions.index(dimension)
   
-  def connectNode(self, other, dimension, nextDimension):
-    index = self.getDimensionIndex(dimension)
-    otherIndex = other.getDimensionIndex(nextDimension)
-    self.connections[index].append(other)
+  def connectNode(self, other):
+    otherDimensions = other.dimensions
+    commonDimension = [d for d in self.dimensions if d in otherDimensions][0]
+    
+    selfIndex = [i for i in range(2) if self.dimensions[i] == commonDimension][0]
+    otherIndex = [i for i in range(2) if other.dimensions[i] == commonDimension][0]
+    
+    self.connections[selfIndex].append(other)
     other.connections[otherIndex].append(self)
     
   def isPortal(self):
