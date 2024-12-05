@@ -1,7 +1,7 @@
 from helpers import getAllLinks
 from Hexagon import makeHexagon
 
-hexA = makeHexagon([3, 1])
+hexA = makeHexagon([0, 1, 2, 3])
 optsA = getAllLinks(hexA)
 optionsA = hexA.getLinks(currentDimension=0, enteringSide=3)
 
