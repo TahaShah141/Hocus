@@ -12,6 +12,20 @@ def getOppositeSide(side):
   if side == 5:
     return 4
   
+def getSideName(side):
+  if side == 0:
+    return "Top"
+  if side == 1:
+    return "Bottom"
+  if side == 2:
+    return "Bottom Left"
+  if side == 3:
+    return "Top Right"
+  if side == 4:
+    return "Bottom Right"
+  if side == 5:
+    return "Top Left"
+  
 def getAllLinks(hexagon):
   links = [[] for _ in range(6)]
   connections = [i for i in range(6) if hexagon.neighbors[i] != None]
@@ -49,20 +63,8 @@ def getAllLinks(hexagon):
   
   return links
 
-# def getNodeFromLinks(hexagon, links):
-#   dimensions = []
-#   for _, nextDim in links:
-#     if nextDim not in dimensions:
-#       dimensions.append(nextDim)
-
-#   if len(dimensions) == 1:
-#     return hexagon.getNode(dimensions[0])
-#   return hexagon.getNode(dimensions[0], dimensions[1])
-
-
-
-      
-
-
-    
+def printPath(path):
+  for hex, dims, direction in path[:-1]:
+    print((hex.name, dims, direction), end=" -> ")  
+  print((path[-1][0].name, path[-1][1]))
 

@@ -50,8 +50,6 @@ class HexagonCell:
     else:
       return options[currentDimension]      
 
-    
-  
   def getNode(self, dimensions):
     if len(dimensions) == 1:
       return self.nodes[dimensions[0]][0]
@@ -80,9 +78,6 @@ class HexagonCell:
   def addNeighbor(self, side, neighbor):
     self.neighbors[side] = neighbor
     neighbor.neighbors[getOppositeSide(side)] = self
-  
-  def addOverlap(self, overlapSide):
-    self.overlapSide = min(getOppositeSide(overlapSide), overlapSide)
   
 def makeHexagon(links, dash=-1):
   hexagons = [None]*6

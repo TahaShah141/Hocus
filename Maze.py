@@ -1,8 +1,5 @@
-from helpers import getOppositeSide, getAllLinks
-
-def printStack(stack):
-  for hex, link in stack:
-    print(hex.name, link)
+from helpers import getOppositeSide, getSideName
+from collections import deque
 
 class Maze:
   def __init__(self, root):
@@ -86,7 +83,7 @@ class Maze:
       currNode = currHex.getNode(currNodeDimensions)
       nextNode = nextHex.getNode(nextNodeDimensions)
       
-      currNode.connectNode(nextNode) 
+      currNode.connectNode(nextNode, nextSide) 
       
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       # def uselessCode():
@@ -119,3 +116,39 @@ class Maze:
   def drawMaze(self):
     pass
   
+  def getOptimalPath(self):
+        
+    visited = set()
+    startNode = self.root.getNode([self.root.startDimension])
+    queue = deque([startNode])
+    visited.add(startNode)
+    
+    previousNodes = {startNode: None}
+    
+    while queue:
+      node = queue.popleft()
+      
+      if node.hexagon.endDimension != -1 and node.dimensions == [node.hexagon.endDimension, node.hexagon.endDimension]:
+        path = []
+        while node is not None:
+          path.append((node.hexagon, node.dimensions, direction))
+          prev = previousNodes[node]
+          if prev != None:
+            node, direction = prev
+          else:
+            node = None
+        return path[::-1]
+      
+      connections = node.connections[0] + node.connections[1]
+      for neighbor, direction in connections:
+        if neighbor not in visited:
+          visited.add(neighbor)
+          previousNodes[neighbor] = (node, direction)
+          queue.append(neighbor)
+          
+  def getSwipePath(self):
+    path = self.getOptimalPath()
+    print("START")
+    for _hex, _dims, direction in path[:-1]:
+      print(getSideName(direction))
+    print("END")
