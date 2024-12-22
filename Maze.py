@@ -150,5 +150,5 @@ class Maze:
     path = self.getOptimalPath()
     print("START")
     for _hex, _dims, direction in path[:-1]:
-      print(getSideName(direction))
+      print(direction)
     print("END")
