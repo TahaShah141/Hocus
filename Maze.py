@@ -156,6 +156,9 @@ class Maze:
           
   def getSwipePath(self):
     path = self.getOptimalPath()
+    if path == None:
+      print("NO PATH FOUND")
+      return []
     directions = []
     print("START")
     for _hex, _dims, direction, weight in path[:-1]:
