@@ -16,15 +16,19 @@ class Maze:
     for links in rootLinks:
       stack.append((root, links))
 
-    def findNextHexagon(hexagon, currentDimension, enteringSide):
+    def findNextHexagon(hexagon, currentDimension, enteringSide, weight=1):
       links = hexagon.getLinks(currentDimension, enteringSide)
+      if hexagon.endDimension != -1:
+        print(f"GOAL ON STRAIGHT LINE {hexagon.name}")
+        return True, hexagon, weight
+        
       if (len(links) == 1) or (len(links) == 2 and links[0][0] == getOppositeSide(links[1][0])):
         nextHexagon = hexagon.neighbors[getOppositeSide(enteringSide)]
         if nextHexagon == None:
-          return False, hexagon
-        return findNextHexagon(nextHexagon, currentDimension, enteringSide)
+          return False, hexagon, weight
+        return findNextHexagon(nextHexagon, currentDimension, enteringSide, weight+1)
       else:
-        return True, hexagon
+        return True, hexagon, weight
       
     self.visited = {}
 
@@ -37,9 +41,12 @@ class Maze:
       # Extract Data
       currHex, nextLink = stack.pop()
       nextSide, nextDimension = nextLink
+      weight = 1
 
       while nextLink in currHex.visitedLinks[nextDimension]:
         print("EDGE CASE OF ADDING EXPIRED LINK TO STACK BEFOREHAND")
+        if len(stack) == 0:
+          return
         currHex, nextLink = stack.pop()
         nextSide, nextDimension = nextLink        
       print(currHex.name, nextLink)
@@ -59,7 +66,7 @@ class Maze:
         if nextHex.neighbors[nextSide] == None:
           print("-dead end-", nextHex.name)
         else:
-          found, nextHex = findNextHexagon(nextHex, nextDimension, prevSide)
+          found, nextHex, weight = findNextHexagon(nextHex, nextDimension, prevSide)
           # print(found, nextHex.name)
           if not found:
             print("OTHER DEAD END", nextHex.name)
@@ -83,7 +90,7 @@ class Maze:
       currNode = currHex.getNode(currNodeDimensions)
       nextNode = nextHex.getNode(nextNodeDimensions)
       
-      currNode.connectNode(nextNode, nextSide) 
+      currNode.connectNode(nextNode, nextSide, weight) 
       
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       # def uselessCode():
@@ -130,25 +137,30 @@ class Maze:
       
       if node.hexagon.endDimension != -1 and node.dimensions == [node.hexagon.endDimension, node.hexagon.endDimension]:
         path = []
+        weight = 1
         while node is not None:
-          path.append((node.hexagon, node.dimensions, direction))
+          path.append((node.hexagon, node.dimensions, direction, weight))
           prev = previousNodes[node]
           if prev != None:
-            node, direction = prev
+            node, direction, weight = prev
           else:
             node = None
         return path[::-1]
       
       connections = node.connections[0] + node.connections[1]
-      for neighbor, direction in connections:
+      for neighbor, direction, weight in connections:
         if neighbor not in visited:
           visited.add(neighbor)
-          previousNodes[neighbor] = (node, direction)
+          previousNodes[neighbor] = (node, direction, weight)
           queue.append(neighbor)
           
   def getSwipePath(self):
     path = self.getOptimalPath()
+    directions = []
     print("START")
-    for _hex, _dims, direction in path[:-1]:
-      print(direction)
+    for _hex, _dims, direction, weight in path[:-1]:
+      print(getSideName(direction), weight)
+      directions.append((direction, weight))
     print("END")
+    return directions
+    

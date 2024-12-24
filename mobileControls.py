@@ -1,17 +1,16 @@
 import os
 import time
 import math
-from pynput import keyboard
 from PIL import Image
 from time import sleep
 
 # Directory to save screenshots
-screenshot_directory = "screenshots"
+screenshot_directory = "ss"
 if not os.path.exists(screenshot_directory):
     os.makedirs(screenshot_directory)
 
 # Function to take a screenshot using ADB and save it as a PNG image
-def take_screenshot():
+def take_screenshot(directory=screenshot_directory):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     screenshot_path = f"{screenshot_directory}/screenshot_{timestamp}.png"
 
@@ -22,7 +21,12 @@ def take_screenshot():
     # Open the screenshot and display it
     try:
         image = Image.open(screenshot_path)
-        image.show()
+        # delete the image too from the computer
+        sleep(1)
+        os.system(f"rm -rf {screenshot_path}")
+        os.system(f"adb shell rm /sdcard/screenshot.png")
+        return image
+        # image.show()
         print(f"Screenshot saved at: {screenshot_path}")
     except Exception as e:
         print(f"Failed to display the image: {e}")
@@ -45,11 +49,11 @@ def swipe(dimension, duration=20):
     os.system(f"adb shell input swipe {cx} {cy} {endX} {endY} {duration}")
   
 
-# SOLUTION FOR LEVEL 19      
-swipes = [2, 4, 3, 0, 2, 4, 1, 2, 0, 3, 5, 2, 1, 3, 1, 3, 1]
+# # SOLUTION FOR LEVEL 19      
+# swipes = [2, 4, 3, 0, 2, 4, 1, 2, 0, 3, 5, 2, 1, 3, 1, 3, 1]
 
-for dim in swipes:
-  swipe(dim)
-  sleep(2.5)
+# for dim in swipes:
+#   swipe(dim)
+#   sleep(2.5)
 
-# take_screenshot()
+take_screenshot()

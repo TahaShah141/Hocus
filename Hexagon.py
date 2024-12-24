@@ -2,7 +2,9 @@ from helpers import getOppositeSide, getAllLinks
 from Graph import Node
 
 class HexagonCell:
-  def __init__(self, name="", startDimension=-1, endDimension=-1, overlapSide=-1):
+  def __init__(self, name="", center=(-1, -1), links=[0, 0, 0, 0, 0, 0], startDimension=-1, endDimension=-1, overlapSide=-1):
+    self.center = center
+    self.links = links
     self.neighbors = [None] * 6
     self.visitedLinks = [[] for _ in range(6)]
     self.overlapSide = overlapSide
