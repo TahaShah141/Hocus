@@ -94,7 +94,7 @@ class Maze:
       currNode = currHex.getNode(currNodeDimensions)
       nextNode = nextHex.getNode(nextNodeDimensions)
       
-      currNode.connectNode(nextNode, nextSide, weight)
+      commonDimension = currNode.connectNode(nextNode, nextSide, weight)
       
       currNodeName = f'{currHex.name}-{currNodeDimensions[0]}-{currNodeDimensions[len(currNodeDimensions)-1]}'
       nextNodeName = f'{nextHex.name}-{nextNodeDimensions[0]}-{nextNodeDimensions[len(nextNodeDimensions)-1]}'
@@ -104,8 +104,8 @@ class Maze:
       if nextNodeName not in self.json["nodes"]:
         self.json["nodes"].append(nextNodeName)
         
-      if ((currNodeName, nextNodeName) not in self.json["edges"]) and ((nextNodeName, currNodeName) not in self.json["edges"]):
-        self.json["edges"].append((currNodeName, nextNodeName))      
+      if ((currNodeName, nextNodeName, commonDimension) not in self.json["edges"]) and ((nextNodeName, currNodeName, commonDimension) not in self.json["edges"]):
+        self.json["edges"].append((currNodeName, nextNodeName, commonDimension))      
       
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       # def uselessCode():
