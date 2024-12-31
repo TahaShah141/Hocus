@@ -18,7 +18,9 @@ export const Graph = ({ json }) => {
     }
   }
 
-  // Transform edges
+  console.log('Portals:', portals);
+
+  // Transform edges  
   const transformEdges = (edges) => {
     return edges.map(([node1, node2, weight]) => {
       const transformedNode1 = node1.split('-').slice(0, 2).concat(weight).join('-');
@@ -32,60 +34,135 @@ export const Graph = ({ json }) => {
   // Convert sets to arrays for rendering
   const NodesArray = Nodes.map((set) => Array.from(set));
 
-  // Calculate angles and radius
-  const angles = [270, 90, 150, 330, 30, 210].map((angle) => (angle * Math.PI) / 180);
-  const radius = 250;
-
   useEffect(() => {
     console.log('Node Coordinates:', nodeCoordinates.current);
   }, []);
 
+  const distributeNodes = (boxX, boxY, boxSize, numNodes) => {
+    const positions = [];
+    const padding = 20;
+    const availableSize = boxSize - 2 * padding;
+
+    const rows = Math.ceil(Math.sqrt(numNodes));
+    const cols = Math.ceil(numNodes / rows);
+
+    const xSpacing = availableSize / cols;
+    const ySpacing = availableSize / rows;
+
+    let count = 0;
+    for (let row = 0; row < rows && count < numNodes; row++) {
+      for (let col = 0; col < cols && count < numNodes; col++) {
+        const x = boxX + padding + col * xSpacing + xSpacing / 2;
+        const y = boxY + padding + row * ySpacing + ySpacing / 2;
+        positions.push({ x, y });
+        count++;
+      }
+    }
+
+    return positions;
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center aspect-square w-full max-w-[700px] rounded-md">
-      <div className="size-2 relative flex flex-col justify-center items-center rounded-full">
-        {Array.from({ length: 6 }, (_, i) => {
-          const x = radius * Math.cos(angles[i]);
-          const y = radius * Math.sin(angles[i]);
+    <canvas
+      ref={(canvasRef) => {
+        if (!canvasRef) return;
+        const ctx = canvasRef.getContext('2d');
 
-          return (
-            <div
-              key={i}
-              className="absolute flex justify-center gap-2 p-2 border bg-gray-200/20"
-              style={{
-                height: radius / 1.25,
-                width: radius / 1.25,
-                transform: `translate(${x}px, ${y}px)`,
-              }}
-            >
-              {NodesArray[i].map((node) => {
-                const key = `${node}-${i}`;
-                const pRef = useRef(null);
+        if (ctx) {
+          // Clear the canvas
+          ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
 
-                useEffect(() => {
-                  if (pRef.current) {
-                    const rect = pRef.current.getBoundingClientRect();
-                    nodeCoordinates.current[key] = {
-                      x: rect.x,
-                      y: rect.y,
-                    };
-                  }
-                }, []);
+          // Set dimensions and center
+          const canvasWidth = canvasRef.width;
+          const canvasHeight = canvasRef.height;
+          const boxSize = 150;
+          const hexRadius = 300;
 
-                return (
-                  <div
-                    key={key}
-                    className="w-8 h-8 bg-gray-200/50 rounded-xl flex flex-col items-center justify-center"
-                  >
-                    <p ref={pRef} className="text-xs text-gray-200">
-                      {key}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-    </div>
+          // Hexagonal arrangement angles
+          const angles = [
+            270, // Top (0)
+            90,  // Bottom (1)
+            150, // Bottom Left (2)
+            330, // Top Right (3)
+            30,  // Bottom Right (4)
+            210, // Top Left (5)
+          ].map((angle) => (angle * Math.PI) / 180);
+
+          // Calculate box positions
+          const boxPositions = angles.map((angle) => {
+            const x = canvasWidth / 2 + hexRadius * Math.cos(angle) - boxSize / 2;
+            const y = canvasHeight / 2 + hexRadius * Math.sin(angle) - boxSize / 2;
+            return { x, y };
+          });
+
+          // Draw Nodes in Boxes
+          NodesArray.forEach((layer, layerIndex) => {
+            const { x: boxX, y: boxY } = boxPositions[layerIndex];
+
+            // Draw box
+            ctx.strokeStyle = '#aaa';
+            ctx.strokeRect(boxX, boxY, boxSize, boxSize);
+
+            const positions = distributeNodes(boxX, boxY, boxSize, layer.length);
+
+            layer.forEach((node, index) => {
+              const { x, y } = positions[index];
+
+              // Save coordinates for edges
+              const key = `${node}-${layerIndex}`;
+              nodeCoordinates.current[key] = { x, y };
+
+              // Draw node
+              ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+              ctx.beginPath();
+              ctx.arc(x, y, 10, 0, Math.PI * 2);
+              ctx.fill();
+
+              // Draw text
+              ctx.fillStyle = '#fff';
+              ctx.font = '12px Arial';
+              ctx.fillText(key, x - 15, y - 15);
+            });
+          });
+
+          // Draw Edges
+          transformedEdges.forEach(([node1, node2]) => {
+            const coord1 = nodeCoordinates.current[node1];
+            const coord2 = nodeCoordinates.current[node2];
+
+            if (coord1 && coord2) {
+              ctx.beginPath();
+              ctx.moveTo(coord1.x, coord1.y);
+              ctx.lineTo(coord2.x, coord2.y);
+              ctx.strokeStyle = '#ccc';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
+          });
+
+          // Draw Portal Edges (Dotted Lines)
+          portals.forEach(([start, dim1, dim2]) => {
+            const startKey = `${start}-${dim1}`;
+            const endKey = `${start}-${dim2}`;
+            const coord1 = nodeCoordinates.current[startKey];
+            const coord2 = nodeCoordinates.current[endKey];
+
+            if (coord1 && coord2) {
+              ctx.beginPath();
+              ctx.moveTo(coord1.x, coord1.y);
+              ctx.lineTo(coord2.x, coord2.y);
+              ctx.strokeStyle = '#999';
+              ctx.lineWidth = 1;
+              ctx.setLineDash([5, 5]); // Dotted line
+              ctx.stroke();
+              ctx.setLineDash([]); // Reset line style
+            }
+          });
+        }
+      }}
+      width={800}
+      height={800}
+      className="rounded-md border"
+    />
   );
 };
