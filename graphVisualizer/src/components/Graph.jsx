@@ -83,17 +83,17 @@ export const Graph = ({ json }) => {
       ref={(canvasRef) => {
         if (!canvasRef) return;
         const ctx = canvasRef.getContext('2d');
-
+  
         if (ctx) {
           // Clear the canvas
           ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
-
+  
           // Set dimensions and center
           const canvasWidth = canvasRef.width;
           const canvasHeight = canvasRef.height;
           const boxSize = 150;
           const hexRadius = 300;
-
+  
           // Hexagonal arrangement angles
           const angles = [
             270, // Top (0)
@@ -103,50 +103,73 @@ export const Graph = ({ json }) => {
             30,  // Bottom Right (4)
             210, // Top Left (5)
           ].map((angle) => (angle * Math.PI) / 180);
-
+  
           // Calculate box positions
           const boxPositions = angles.map((angle) => {
             const x = canvasWidth / 2 + hexRadius * Math.cos(angle) - boxSize / 2;
             const y = canvasHeight / 2 + hexRadius * Math.sin(angle) - boxSize / 2;
             return { x, y };
           });
-
+  
+          // Count edges for each node
+          const edgeCounts = {};
+          transformedEdges.forEach(([node1, node2]) => {
+            edgeCounts[node1] = (edgeCounts[node1] || 0) + 1;
+            edgeCounts[node2] = (edgeCounts[node2] || 0) + 1;
+          });
+  
           // Draw Nodes in Boxes
           NodesArray.forEach((layer, layerIndex) => {
             const { x: boxX, y: boxY } = boxPositions[layerIndex];
-
+  
             // Draw box with border color
             ctx.strokeStyle = colors[layerIndex];
             ctx.lineWidth = 4;
             ctx.strokeRect(boxX, boxY, boxSize, boxSize);
-
+  
             const positions = distributeNodes(boxX, boxY, boxSize, layer.length);
-
+  
             layer.forEach((node, index) => {
               const { x, y } = positions[index];
-
+  
               // Save coordinates for edges
               const key = `${node}-${layerIndex}`;
               nodeCoordinates.current[key] = { x, y };
-
-              // Draw node with fill color
-              ctx.fillStyle = colors[layerIndex];
+  
+              // Check if the node is a portal
+              const isPortal = portals.some(
+                ([portalNode]) => portalNode === node
+              );
+  
+              // Check if the node has only one edge
+              const isSingleEdge = edgeCounts[key] === 1;
+  
+              // Draw node with appropriate color
+              ctx.fillStyle = isSingleEdge ? 'darkred' : colors[layerIndex];
               ctx.beginPath();
               ctx.arc(x, y, 10, 0, Math.PI * 2);
               ctx.fill();
-
+  
+              // Add a white dot for portal nodes
+              if (isPortal && !isSingleEdge) {
+                ctx.fillStyle = '#3e7568';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 3);
+                ctx.fill();
+              }
+  
               // Draw text
               ctx.fillStyle = '#fff';
               ctx.font = '12px Arial';
               // ctx.fillText(key, x - 15, y - 15);
             });
           });
-
+  
           // Draw Edges
           transformedEdges.forEach(([node1, node2]) => {
             const coord1 = nodeCoordinates.current[node1];
             const coord2 = nodeCoordinates.current[node2];
-
+  
             if (coord1 && coord2) {
               ctx.beginPath();
               ctx.moveTo(coord1.x, coord1.y);
@@ -156,14 +179,14 @@ export const Graph = ({ json }) => {
               ctx.stroke();
             }
           });
-
+  
           // Draw Portal Edges (Dotted Lines)
           portals.forEach(([start, dim1, dim2]) => {
             const startKey = `${start}-${dim1}`;
             const endKey = `${start}-${dim2}`;
             const coord1 = nodeCoordinates.current[startKey];
             const coord2 = nodeCoordinates.current[endKey];
-
+  
             if (coord1 && coord2) {
               ctx.beginPath();
               ctx.moveTo(coord1.x, coord1.y);
@@ -182,4 +205,5 @@ export const Graph = ({ json }) => {
       className="rounded-md border"
     />
   );
+  
 };
