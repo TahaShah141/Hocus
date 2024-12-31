@@ -43,21 +43,34 @@ export const Graph = ({ json }) => {
     const padding = 20;
     const availableSize = boxSize - 2 * padding;
 
-    const rows = Math.ceil(Math.sqrt(numNodes));
-    const cols = Math.ceil(numNodes / rows);
+    const cx = boxX + boxSize / 2;
+    const cy = boxY + boxSize / 2;
 
-    const xSpacing = availableSize / cols;
-    const ySpacing = availableSize / rows;
+    const radius = availableSize / 2;
 
-    let count = 0;
-    for (let row = 0; row < rows && count < numNodes; row++) {
-      for (let col = 0; col < cols && count < numNodes; col++) {
-        const x = boxX + padding + col * xSpacing + xSpacing / 2;
-        const y = boxY + padding + row * ySpacing + ySpacing / 2;
-        positions.push({ x, y });
-        count++;
-      }
+    for (let i = 0; i < numNodes; i++) {
+      const angle = (i * Math.PI * 2) / (numNodes);
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      positions.push({ x, y });
     }
+
+
+    // const rows = Math.ceil(Math.sqrt(numNodes));
+    // const cols = Math.ceil(numNodes / rows);
+
+    // const xSpacing = availableSize / cols;
+    // const ySpacing = availableSize / rows;
+
+    // let count = 0;
+    // for (let row = 0; row < rows && count < numNodes; row++) {
+    //   for (let col = 0; col < cols && count < numNodes; col++) {
+    //     const x = boxX + padding + col * xSpacing + xSpacing / 2;
+    //     const y = boxY + padding + row * ySpacing + ySpacing / 2;
+    //     positions.push({ x, y });
+    //     count++;
+    //   }
+    // }
 
     return positions;
   };
