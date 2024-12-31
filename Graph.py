@@ -18,7 +18,7 @@ class Node:
     
     self.connections[selfIndex].append((other, direction, weight))
     other.connections[otherIndex].append((self, getOppositeSide(direction), weight))
-    
+        
   def isPortal(self):
     return self.dimensions[0] != self.dimensions[1]
     
