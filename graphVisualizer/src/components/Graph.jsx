@@ -7,6 +7,9 @@ export const Graph = ({ json }) => {
   const portals = [];
   const nodeCoordinates = useRef({}); // Use a ref to store the coordinates
 
+  // Define bright colors for borders and nodes
+  const colors = ['#FF5733', '#33FF57', '#5733FF', '#FF33FF', '#33FFF5', '#FFD700'];
+
   // Process nodes
   for (const node of nodes) {
     const [hexI, hexJ, dim1, dim2] = node.split('-');
@@ -20,7 +23,7 @@ export const Graph = ({ json }) => {
 
   console.log('Portals:', portals);
 
-  // Transform edges  
+  // Transform edges
   const transformEdges = (edges) => {
     return edges.map(([node1, node2, weight]) => {
       const transformedNode1 = node1.split('-').slice(0, 2).concat(weight).join('-');
@@ -99,8 +102,9 @@ export const Graph = ({ json }) => {
           NodesArray.forEach((layer, layerIndex) => {
             const { x: boxX, y: boxY } = boxPositions[layerIndex];
 
-            // Draw box
-            ctx.strokeStyle = '#aaa';
+            // Draw box with border color
+            ctx.strokeStyle = colors[layerIndex];
+            ctx.lineWidth = 4;
             ctx.strokeRect(boxX, boxY, boxSize, boxSize);
 
             const positions = distributeNodes(boxX, boxY, boxSize, layer.length);
@@ -112,8 +116,8 @@ export const Graph = ({ json }) => {
               const key = `${node}-${layerIndex}`;
               nodeCoordinates.current[key] = { x, y };
 
-              // Draw node
-              ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+              // Draw node with fill color
+              ctx.fillStyle = colors[layerIndex];
               ctx.beginPath();
               ctx.arc(x, y, 10, 0, Math.PI * 2);
               ctx.fill();
@@ -121,7 +125,7 @@ export const Graph = ({ json }) => {
               // Draw text
               ctx.fillStyle = '#fff';
               ctx.font = '12px Arial';
-              ctx.fillText(key, x - 15, y - 15);
+              // ctx.fillText(key, x - 15, y - 15);
             });
           });
 
