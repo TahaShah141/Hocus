@@ -1,11 +1,12 @@
 from helpers import getOppositeSide, getSideName
 from collections import deque
+import json
 
 class Maze:
   def __init__(self, root):
     self.root = root
 
-  def buildConnections(self):
+  def buildConnections(self,createJson = True):
 
     stack = []
     root = self.root
@@ -33,6 +34,9 @@ class Maze:
     self.visited = {}
 
     def explore(stack, currentDimension, enteringSide=None):
+
+      weight = 1 #default weight
+      deadEnd = False
 
       # Base Case
       if len(stack) == 0:
@@ -65,14 +69,17 @@ class Maze:
         #two cases: straight line or dead end
         if nextHex.neighbors[nextSide] == None:
           print("-dead end-", nextHex.name)
+          deadEnd = True
         else:
           found, nextHex, weight = findNextHexagon(nextHex, nextDimension, prevSide)
           # print(found, nextHex.name)
           if not found:
             print("OTHER DEAD END", nextHex.name)
+            deadEnd = True
+
           nextLinks = nextHex.getLinks(nextDimension, prevSide)
       
-      
+  
       # Mark the links
       currLinkToBan = (nextSide, nextDimension)
       nextLinkToBan = (prevSide, nextDimension)
@@ -91,6 +98,32 @@ class Maze:
       nextNode = nextHex.getNode(nextNodeDimensions)
       
       currNode.connectNode(nextNode, nextSide, weight) 
+
+      currNode.connectNode(nextNode, nextSide) 
+
+      if createJson:
+
+        node1Type, node2Type = "regular", "regular"
+        if currHex.startDimension != -1 and currHex.startDimension in currNode.dimensions:
+          node1Type = "start"
+        elif currHex.endDimension != -1 and currHex.endDimension in currNode.dimensions:
+          node1Type = "end"
+        if nextHex.startDimension != -1 and nextHex.startDimension in nextNode.dimensions:
+          node2Type = "start"
+        elif nextHex.endDimension != -1 and nextHex.endDimension in nextNode.dimensions:
+          node2Type = "end"
+        elif deadEnd:
+          node2Type = "deadend"
+        newEdge = {
+          "hex1Name": currHex.name,
+          "node1Dim": currNode.dimensions,
+          "node1Type": node1Type,
+          "hex2Name": nextHex.name, 
+          "node2Dim":nextNode.dimensions,
+          "node2Type": node2Type,
+          "weight": weight
+        }
+        data.append(newEdge)
       
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       # def uselessCode():
@@ -101,7 +134,7 @@ class Maze:
           sameDimLinks.append(link)
         else:
           otherLinks.append(link)
-      
+
       stack += otherLinks
       stack += sameDimLinks
 
@@ -115,8 +148,19 @@ class Maze:
       # stack += newStackLinks
       explore(stack, nextDimension, prevSide)
 
+    if createJson:
+      fileName='edges.json'
+      data=[] #initialize an empty data array which will store edge objects
+      with open(fileName, "w") as json_file:
+          json.dump(data, json_file, indent=4)
+
     # CALL THE RECURSIVE FUNCTION
     explore(stack, currentDimension)
+
+    if createJson:
+        with open(fileName, "w") as json_file:
+          json.dump(data, json_file, indent=4) #push all the updated data into the json file
+
     for d in self.visited:
       print(d, self.visited[d])
     
@@ -153,7 +197,7 @@ class Maze:
           visited.add(neighbor)
           previousNodes[neighbor] = (node, direction, weight)
           queue.append(neighbor)
-          
+     
   def getSwipePath(self):
     path = self.getOptimalPath()
     if path == None:

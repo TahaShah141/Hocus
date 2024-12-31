@@ -1,0 +1,14 @@
+.hexagonal-layout {
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
+  .dimension-box {
+    /* position: absolute; */
+    width: 100px; /* Adjust for the size of each dimension box */
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }

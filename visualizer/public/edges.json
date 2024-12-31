@@ -1,0 +1,317 @@
+[
+    {
+        "hex1Name": "A",
+        "node1Dim": [
+            0,
+            0
+        ],
+        "node1Type": "start",
+        "hex2Name": "B",
+        "node2Dim": [
+            0,
+            0
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "B",
+        "node1Dim": [
+            0,
+            0
+        ],
+        "node1Type": "regular",
+        "hex2Name": "C",
+        "node2Dim": [
+            5,
+            0
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "C",
+        "node1Dim": [
+            5,
+            0
+        ],
+        "node1Type": "regular",
+        "hex2Name": "I",
+        "node2Dim": [
+            3,
+            0
+        ],
+        "node2Type": "regular",
+        "weight": 2
+    },
+    {
+        "hex1Name": "I",
+        "node1Dim": [
+            3,
+            0
+        ],
+        "node1Type": "regular",
+        "hex2Name": "H",
+        "node2Dim": [
+            3,
+            3
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "H",
+        "node1Dim": [
+            3,
+            3
+        ],
+        "node1Type": "regular",
+        "hex2Name": "D",
+        "node2Dim": [
+            3,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "D",
+        "node1Dim": [
+            3,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "F",
+        "node2Dim": [
+            3,
+            3
+        ],
+        "node2Type": "deadend",
+        "weight": 2
+    },
+    {
+        "hex1Name": "D",
+        "node1Dim": [
+            3,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "C",
+        "node2Dim": [
+            5,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "C",
+        "node1Dim": [
+            5,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "B",
+        "node2Dim": [
+            1,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "B",
+        "node1Dim": [
+            1,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "A",
+        "node2Dim": [
+            4,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "A",
+        "node1Dim": [
+            4,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "E",
+        "node2Dim": [
+            4,
+            2
+        ],
+        "node2Type": "regular",
+        "weight": 2
+    },
+    {
+        "hex1Name": "E",
+        "node1Dim": [
+            4,
+            2
+        ],
+        "node1Type": "regular",
+        "hex2Name": "G",
+        "node2Dim": [
+            4,
+            4
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "G",
+        "node1Dim": [
+            4,
+            4
+        ],
+        "node1Type": "regular",
+        "hex2Name": "F",
+        "node2Dim": [
+            4,
+            4
+        ],
+        "node2Type": "deadend",
+        "weight": 1
+    },
+    {
+        "hex1Name": "E",
+        "node1Dim": [
+            4,
+            2
+        ],
+        "node1Type": "regular",
+        "hex2Name": "F",
+        "node2Dim": [
+            5,
+            2
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "F",
+        "node1Dim": [
+            5,
+            2
+        ],
+        "node1Type": "regular",
+        "hex2Name": "G",
+        "node2Dim": [
+            5,
+            5
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "G",
+        "node1Dim": [
+            5,
+            5
+        ],
+        "node1Type": "regular",
+        "hex2Name": "E",
+        "node2Dim": [
+            5,
+            2
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "E",
+        "node1Dim": [
+            5,
+            2
+        ],
+        "node1Type": "regular",
+        "hex2Name": "C",
+        "node2Dim": [
+            5,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "E",
+        "node1Dim": [
+            5,
+            2
+        ],
+        "node1Type": "regular",
+        "hex2Name": "D",
+        "node2Dim": [
+            2,
+            1
+        ],
+        "node2Type": "regular",
+        "weight": 1
+    },
+    {
+        "hex1Name": "D",
+        "node1Dim": [
+            2,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "H",
+        "node2Dim": [
+            2,
+            2
+        ],
+        "node2Type": "end",
+        "weight": 1
+    },
+    {
+        "hex1Name": "H",
+        "node1Dim": [
+            2,
+            2
+        ],
+        "node1Type": "end",
+        "hex2Name": "I",
+        "node2Dim": [
+            2,
+            2
+        ],
+        "node2Type": "deadend",
+        "weight": 1
+    },
+    {
+        "hex1Name": "D",
+        "node1Dim": [
+            2,
+            1
+        ],
+        "node1Type": "regular",
+        "hex2Name": "I",
+        "node2Dim": [
+            1,
+            1
+        ],
+        "node2Type": "deadend",
+        "weight": 1
+    },
+    {
+        "hex1Name": "C",
+        "node1Dim": [
+            5,
+            0
+        ],
+        "node1Type": "regular",
+        "hex2Name": "A",
+        "node2Dim": [
+            5,
+            5
+        ],
+        "node2Type": "deadend",
+        "weight": 1
+    }
+]
