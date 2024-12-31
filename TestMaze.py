@@ -27,6 +27,7 @@ F.addNeighbor(2, G) # F-G
 H.addNeighbor(1, I) # H-I
 
 TestMaze = Maze(root=A)
-TestMaze.buildConnections()
+TestMaze.buildConnections(createJson=True)
 print("-"*50)
 path = TestMaze.getSwipePath()
+# TestMaze.createJson()

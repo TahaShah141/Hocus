@@ -9,6 +9,7 @@ class Node:
     self.connections = [[], []]
     self.hexagon = hexagon
   
+  # def connectNode(self, other, direction, weight=1):
   def connectNode(self, other, direction):
     otherDimensions = other.dimensions
     commonDimension = [d for d in self.dimensions if d in otherDimensions][0]
