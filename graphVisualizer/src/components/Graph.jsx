@@ -145,13 +145,13 @@ export const Graph = ({ json }) => {
               const isSingleEdge = edgeCounts[key] === 1;
   
               // Draw node with appropriate color
-              ctx.fillStyle = isSingleEdge ? 'darkred' : colors[layerIndex];
+              ctx.fillStyle = isSingleEdge && !isPortal ? 'darkred' : colors[layerIndex];
               ctx.beginPath();
               ctx.arc(x, y, 10, 0, Math.PI * 2);
               ctx.fill();
   
               // Add a white dot for portal nodes
-              if (isPortal && !isSingleEdge) {
+              if (isPortal) {
                 ctx.fillStyle = '#3e7568';
                 ctx.beginPath();
                 ctx.arc(x, y, 4, 0, Math.PI * 3);

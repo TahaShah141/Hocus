@@ -19,7 +19,8 @@ class Maze:
 
     for links in rootLinks:
       stack.append((root, links))
-
+      
+    #finds the next hexagon in a straight line recursively returns the last hexagon in the line
     def findNextHexagon(hexagon, currentDimension, enteringSide, weight=1):
       links = hexagon.getLinks(currentDimension, enteringSide)
       if hexagon.endDimension != -1:
