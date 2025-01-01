@@ -1,5 +1,5 @@
 from helpers import getOppositeSide, getAllLinks
-from Graph import Node
+from Node import Node
 
 class HexagonCell:
   def __init__(self, name="", center=(-1, -1), links=[0, 0, 0, 0, 0, 0], startDimension=-1, endDimension=-1, overlapSide=-1):

@@ -47,13 +47,3 @@ def swipe(dimension, duration=20):
         
     # os.system(f"adb shell input tab {endX} {endY}")
     os.system(f"adb shell input swipe {cx} {cy} {endX} {endY} {duration}")
-  
-
-# # SOLUTION FOR LEVEL 19      
-# swipes = [2, 4, 3, 0, 2, 4, 1, 2, 0, 3, 5, 2, 1, 3, 1, 3, 1]
-
-# for dim in swipes:
-#   swipe(dim)
-#   sleep(2.5)
-
-take_screenshot()

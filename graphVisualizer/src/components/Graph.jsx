@@ -58,23 +58,6 @@ export const Graph = ({ json }) => {
       positions.push({ x, y });
     }
 
-
-    // const rows = Math.ceil(Math.sqrt(numNodes));
-    // const cols = Math.ceil(numNodes / rows);
-
-    // const xSpacing = availableSize / cols;
-    // const ySpacing = availableSize / rows;
-
-    // let count = 0;
-    // for (let row = 0; row < rows && count < numNodes; row++) {
-    //   for (let col = 0; col < cols && count < numNodes; col++) {
-    //     const x = boxX + padding + col * xSpacing + xSpacing / 2;
-    //     const y = boxY + padding + row * ySpacing + ySpacing / 2;
-    //     positions.push({ x, y });
-    //     count++;
-    //   }
-    // }
-
     return positions;
   };
 

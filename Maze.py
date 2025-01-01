@@ -1,6 +1,5 @@
 from helpers import getOppositeSide, getSideName
 from collections import deque
-import json
 
 class Maze:
   def __init__(self, root):
@@ -10,7 +9,7 @@ class Maze:
       "edges": []
     }
 
-  def buildConnections(self,createJson = True):
+  def buildConnections(self):
 
     stack = []
     root = self.root
@@ -38,10 +37,7 @@ class Maze:
       
     self.visited = {}
 
-    def explore(stack, currentDimension, enteringSide=None):
-
-      weight = 1 #default weight
-      deadEnd = False
+    def explore(stack, currentDimension):
 
       # Base Case
       if len(stack) == 0:
@@ -74,13 +70,11 @@ class Maze:
         #two cases: straight line or dead end
         if nextHex.neighbors[nextSide] == None:
           print("-dead end-", nextHex.name)
-          deadEnd = True
         else:
           found, nextHex, weight = findNextHexagon(nextHex, nextDimension, prevSide)
           # print(found, nextHex.name)
           if not found:
             print("OTHER DEAD END", nextHex.name)
-            deadEnd = True
 
           nextLinks = nextHex.getLinks(nextDimension, prevSide)
       
@@ -136,26 +130,13 @@ class Maze:
       prevSide = getOppositeSide(nextSide)
 
       # stack += newStackLinks
-      explore(stack, nextDimension, prevSide)
-
-    if createJson:
-      fileName='edges.json'
-      data=[] #initialize an empty data array which will store edge objects
-      with open(fileName, "w") as json_file:
-          json.dump(data, json_file, indent=4)
+      explore(stack, nextDimension)
 
     # CALL THE RECURSIVE FUNCTION
     explore(stack, currentDimension)
 
-    if createJson:
-        with open(fileName, "w") as json_file:
-          json.dump(data, json_file, indent=4) #push all the updated data into the json file
-
     for d in self.visited:
       print(d, self.visited[d])
-    
-  def drawMaze(self):
-    pass
   
   def getOptimalPath(self):
         
