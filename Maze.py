@@ -5,6 +5,10 @@ import json
 class Maze:
   def __init__(self, root):
     self.root = root
+    self.json = {
+      "nodes": [],
+      "edges": []
+    }
 
   def buildConnections(self,createJson = True):
 
@@ -16,7 +20,8 @@ class Maze:
 
     for links in rootLinks:
       stack.append((root, links))
-
+      
+    #finds the next hexagon in a straight line recursively returns the last hexagon in the line
     def findNextHexagon(hexagon, currentDimension, enteringSide, weight=1):
       links = hexagon.getLinks(currentDimension, enteringSide)
       if hexagon.endDimension != -1:
@@ -97,33 +102,18 @@ class Maze:
       currNode = currHex.getNode(currNodeDimensions)
       nextNode = nextHex.getNode(nextNodeDimensions)
       
-      currNode.connectNode(nextNode, nextSide, weight) 
-
-      currNode.connectNode(nextNode, nextSide) 
-
-      if createJson:
-
-        node1Type, node2Type = "regular", "regular"
-        if currHex.startDimension != -1 and currHex.startDimension in currNode.dimensions:
-          node1Type = "start"
-        elif currHex.endDimension != -1 and currHex.endDimension in currNode.dimensions:
-          node1Type = "end"
-        if nextHex.startDimension != -1 and nextHex.startDimension in nextNode.dimensions:
-          node2Type = "start"
-        elif nextHex.endDimension != -1 and nextHex.endDimension in nextNode.dimensions:
-          node2Type = "end"
-        elif deadEnd:
-          node2Type = "deadend"
-        newEdge = {
-          "hex1Name": currHex.name,
-          "node1Dim": currNode.dimensions,
-          "node1Type": node1Type,
-          "hex2Name": nextHex.name, 
-          "node2Dim":nextNode.dimensions,
-          "node2Type": node2Type,
-          "weight": weight
-        }
-        data.append(newEdge)
+      commonDimension = currNode.connectNode(nextNode, nextSide, weight)
+      
+      currNodeName = f'{currHex.name}-{currNodeDimensions[0]}-{currNodeDimensions[len(currNodeDimensions)-1]}'
+      nextNodeName = f'{nextHex.name}-{nextNodeDimensions[0]}-{nextNodeDimensions[len(nextNodeDimensions)-1]}'
+      
+      if currNodeName not in self.json["nodes"]:
+        self.json["nodes"].append(currNodeName)
+      if nextNodeName not in self.json["nodes"]:
+        self.json["nodes"].append(nextNodeName)
+        
+      if ((currNodeName, nextNodeName, commonDimension) not in self.json["edges"]) and ((nextNodeName, currNodeName, commonDimension) not in self.json["edges"]):
+        self.json["edges"].append((currNodeName, nextNodeName, commonDimension))      
       
       newStackLinks = [(nextHex, link) for link in nextLinks if link not in nextHex.visitedLinks[nextDimension]]
       # def uselessCode():
